@@ -1,6 +1,6 @@
 FROM php:8.0-fpm
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -12,9 +12,16 @@ RUN apt-get update && apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    libzip-dev \
+    libonig-dev \
+    libmcrypt-dev
 
-# Install extensions
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
 # Install Composer
